@@ -1,15 +1,19 @@
 """LLM client factory with fallback chain."""
 from __future__ import annotations
 
+import json
 from typing import Any, Callable
 
+import google.auth
+import google.auth.transport.requests
+from google.oauth2 import service_account
 from langchain_core.language_models.chat_models import BaseChatModel
 from langchain_core.messages import BaseMessage
 from langchain_groq import ChatGroq
 from langchain_openai import ChatOpenAI
 
 from config import (
-    GEMINI_API_KEY,
+    GCP_SA_JSON,
     GEMINI_BASE_URL,
     GEMINI_FLASH,
     GEMINI_PRO,
@@ -17,11 +21,35 @@ from config import (
     GROQ_MODEL,
 )
 
+_SCOPES = ["https://www.googleapis.com/auth/cloud-platform"]
+_creds = None
+
+
+def _get_creds():
+    """加载 Service Account 凭据：优先 JSON secret，回落到 ADC（本地文件路径或 gcloud）。"""
+    global _creds
+    if _creds is None:
+        if GCP_SA_JSON:
+            info = json.loads(GCP_SA_JSON)
+            _creds = service_account.Credentials.from_service_account_info(
+                info, scopes=_SCOPES,
+            )
+        else:
+            # google.auth.default 自动处理 GOOGLE_APPLICATION_CREDENTIALS / gcloud ADC
+            _creds, _ = google.auth.default(scopes=_SCOPES)
+    if not _creds.valid:
+        _creds.refresh(google.auth.transport.requests.Request())
+    return _creds
+
+
+def _gemini_access_token() -> str:
+    return _get_creds().token
+
 
 def get_gemini_pro(temperature: float = 0.2) -> BaseChatModel:
     return ChatOpenAI(
         model=GEMINI_PRO,
-        api_key=GEMINI_API_KEY,
+        api_key=_gemini_access_token(),
         base_url=GEMINI_BASE_URL,
         temperature=temperature,
         timeout=90,
@@ -32,7 +60,7 @@ def get_gemini_pro(temperature: float = 0.2) -> BaseChatModel:
 def get_gemini_flash(temperature: float = 0.2) -> BaseChatModel:
     return ChatOpenAI(
         model=GEMINI_FLASH,
-        api_key=GEMINI_API_KEY,
+        api_key=_gemini_access_token(),
         base_url=GEMINI_BASE_URL,
         temperature=temperature,
         timeout=60,

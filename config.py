@@ -8,8 +8,11 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
-GEMINI_API_KEY: Final[str | None] = os.getenv("GEMINI_API_KEY")
 GROQ_API_KEY: Final[str | None] = os.getenv("GROQ_API_KEY")
+# Vertex AI Service Account：支持两种方式
+# 1) GOOGLE_APPLICATION_CREDENTIALS_JSON：直接把 JSON 内容作为 secret（HF Spaces 推荐）
+# 2) GOOGLE_APPLICATION_CREDENTIALS：本地文件路径（本地开发用，google-auth 会自动读取）
+GCP_SA_JSON: Final[str | None] = os.getenv("GOOGLE_APPLICATION_CREDENTIALS_JSON")
 
 GCP_PROJECT: Final[str] = os.getenv("GOOGLE_CLOUD_PROJECT", "yansheng-project")
 GCP_REGION: Final[str] = os.getenv("GOOGLE_CLOUD_REGION", "us-central1")

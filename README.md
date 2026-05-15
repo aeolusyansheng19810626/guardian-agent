@@ -37,11 +37,13 @@ license: mit
 
 | 名称 | 必需 | 说明 |
 |---|---|---|
-| `GEMINI_API_KEY` | ✅ | Vertex AI OpenAI 兼容端点 API Key |
+| `GOOGLE_APPLICATION_CREDENTIALS_JSON` | ✅ | Vertex AI Service Account JSON 文件**全部内容**（直接粘贴） |
 | `GROQ_API_KEY` | ✅ | Groq API Key |
 | `LANGCHAIN_API_KEY` | 可选 | 配置后自动开启 LangSmith trace |
 | `GOOGLE_CLOUD_PROJECT` | 可选 | 默认 `yansheng-project` |
 | `GOOGLE_CLOUD_REGION` | 可选 | 默认 `us-central1` |
+
+> Service Account 需开启 `aiplatform.user` 角色，作用域 `https://www.googleapis.com/auth/cloud-platform`。代码用 `google-auth` 自动刷新 access token 传给 Vertex AI OpenAI 兼容端点。
 
 ## 本地运行
 
