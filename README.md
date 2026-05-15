@@ -31,6 +31,38 @@ license: mit
 - UI：Streamlit
 - 可视化：Plotly
 
+## 项目结构
+
+```
+guardian-agent/
+├── app.py                      # Streamlit 入口（双 Tab UI）
+├── config.py                   # 模型/权重/阈值/认证集中配置
+├── requirements.txt
+├── .env.example
+├── .github/workflows/
+│   └── sync-to-hf.yml          # push 后自动同步到 HF Space
+├── graph/
+│   ├── state.py                # AgentState (TypedDict + reducer)
+│   ├── builder.py              # LangGraph 图组装：classify→并行→guardian→reporter
+│   └── guardian_node.py        # Guardian 加权裁决 + LLM-as-a-judge
+├── agents/
+│   ├── base.py                 # 共用 schema / prompt 模板 / 降级回调
+│   ├── completeness.py         # 完整性（Groq 优先）
+│   ├── quality.py              # 质量（Gemini Flash + 障害模式 5-Why）
+│   ├── compliance.py           # 格式合规（Gemini Flash）
+│   ├── logic.py                # 逻辑一致性（Gemini Flash）
+│   └── prevention.py           # 再発防止（Gemini Flash，仅障害模式）
+├── reporter/
+│   └── generator.py            # Gemini Pro 生成 Markdown 报告 + 退化模板
+├── rules/
+│   ├── incident_rules.md       # 障害报告评估规则
+│   └── delivery_rules.md       # 交付物评估规则
+└── utils/
+    ├── classifier.py           # 文档类型识别（关键词 + LLM 兜底）
+    ├── llm_factory.py          # 三家 LLM 工厂 + 降级链 + Vertex AI access token
+    └── visualizer.py           # plotly 雷达图 + 趋势折线图
+```
+
 ## HuggingFace Spaces Secrets
 
 在 Space → Settings → Variables and secrets 配置：
@@ -47,11 +79,54 @@ license: mit
 
 ## 本地运行
 
+### 1. 克隆仓库
+
 ```bash
+git clone https://github.com/aeolusyansheng19810626/guardian-agent.git
+cd guardian-agent
+```
+
+### 2. 创建虚拟环境并安装依赖
+
+```bash
+# Windows (PowerShell)
+python -m venv .venv
+.\.venv\Scripts\Activate.ps1
 pip install -r requirements.txt
-cp .env.example .env  # 填入 API Key
+
+# macOS / Linux
+python3 -m venv .venv
+source .venv/bin/activate
+pip install -r requirements.txt
+```
+
+### 3. 配置环境变量
+
+```bash
+cp .env.example .env
+```
+
+编辑 `.env`，至少填写：
+
+- `GROQ_API_KEY`：从 https://console.groq.com 获取
+- Vertex AI 认证（二选一）：
+  - `GOOGLE_APPLICATION_CREDENTIALS=/绝对路径/sa.json`（指向本地 service account JSON 文件），**或**
+  - 先运行 `gcloud auth application-default login` 使用 ADC
+- `LANGCHAIN_API_KEY`（可选）：开启 LangSmith trace
+- `GOOGLE_CLOUD_PROJECT` / `GOOGLE_CLOUD_REGION`：默认 `yansheng-project` / `us-central1`，按需覆盖
+
+### 4. 启动
+
+```bash
 streamlit run app.py
 ```
+
+浏览器打开 http://localhost:8501
+
+### 5. （可选）自动同步到 HuggingFace Space
+
+仓库已配置 `.github/workflows/sync-to-hf.yml`：每次 push 到 `main` 自动镜像到 HF Space。
+启用方法：在 GitHub 仓库 Secrets 添加 `HF_TOKEN`（HuggingFace Write token）。
 
 ## 测试样例
 
