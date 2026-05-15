@@ -41,7 +41,7 @@ VERDICT_BADGE = {
 # ---- Sidebar ----
 with st.sidebar:
     st.markdown("## 🛡️ Guardian Agent")
-    st.caption("IBM 项目团队内部质量审查（演示）")
+    st.caption("项目团队内部质量审查（演示）")
     st.divider()
     st.metric("本会话提交次数", len(st.session_state.history))
     if st.session_state.history:

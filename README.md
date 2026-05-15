@@ -12,7 +12,7 @@ license: mit
 
 # Guardian Agent
 
-面向 IBM 项目团队日常交付物与障害报告的多 Agent 质量审查平台（演示版）。
+面向项目团队日常交付物与障害报告的多 Agent 质量审查平台（演示版）。
 
 ## 功能
 
