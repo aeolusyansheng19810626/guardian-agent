@@ -11,3 +11,14 @@ venv/
 *.log
 .streamlit/secrets.toml
 .claude/
+
+# Frontend
+components/guardian_ui/frontend/node_modules/
+components/guardian_ui/frontend/*.tsbuildinfo
+# NOTE: components/guardian_ui/frontend/dist/ IS tracked — HF Streamlit SDK
+# does not run `npm build` so the prebuilt assets must ship with the repo.
+
+# Test artifacts
+tests/_streamlit.log
+tests/_debug_page.*
+

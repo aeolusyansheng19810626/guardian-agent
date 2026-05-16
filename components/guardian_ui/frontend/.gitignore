@@ -1,0 +1,7 @@
+node_modules
+.vite
+*.tsbuildinfo
+# tsc -b composite emits these next to vite.config.ts
+vite.config.js
+vite.config.d.ts
+# dist/ is intentionally tracked — HF Streamlit SDK does not run npm build.
