@@ -113,13 +113,15 @@ export default function App() {
     });
   }, [args?.theme, args?.density, args?.paletteColor]);
 
-  // Frame height — fill the iframe with our app
+  // Frame height — the parent page enforces height: 100vh on our iframe via
+  // !important CSS, so window.innerHeight inside the iframe == the actual
+  // viewport. Just report it back so Streamlit's inline-style doesn't fight.
   useEffect(() => {
     const update = () => setFrameHeight(window.innerHeight);
     update();
     window.addEventListener("resize", update);
     return () => window.removeEventListener("resize", update);
-  }, [args?.state]);
+  }, []);
 
   if (!args) {
     return (

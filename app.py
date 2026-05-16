@@ -25,28 +25,53 @@ st.set_page_config(
 )
 
 # Strip Streamlit chrome so the React component fills the viewport.
-st.markdown(
+# NOTE: must use st.html() — recent Streamlit versions sanitize <style> out of
+# st.markdown(unsafe_allow_html=True).
+st.html(
     """
     <style>
-      header[data-testid="stHeader"], footer, [data-testid="stToolbar"],
-      [data-testid="stDecoration"], [data-testid="stStatusWidget"] {
-        display: none !important;
-      }
-      section[data-testid="stSidebar"] { display: none !important; }
-      .main > .block-container,
-      [data-testid="stAppViewBlockContainer"] {
+      header[data-testid="stHeader"],
+      [data-testid="stToolbar"],
+      [data-testid="stDecoration"],
+      [data-testid="stStatusWidget"],
+      [data-testid="stAppDeployButton"],
+      [data-testid="stMainMenu"],
+      footer { display: none !important; }
+
+      [data-testid="stSidebar"] { display: none !important; }
+
+      [data-testid="stAppViewContainer"] { padding: 0 !important; }
+
+      [data-testid="stMain"],
+      [data-testid="stMainBlockContainer"] {
         padding: 0 !important;
+        margin: 0 !important;
         max-width: 100% !important;
-      }
-      .stApp { background: #f8fafc; }
-      iframe[title^="components.guardian_ui"] {
         width: 100% !important;
-        min-height: 100vh !important;
-        border: 0 !important;
       }
+      [data-testid="stMainBlockContainer"] > div { gap: 0 !important; }
+
+      [data-testid="stVerticalBlock"] { gap: 0 !important; }
+
+      .stApp,
+      [data-testid="stApp"] { background: #f8fafc; }
+
+      /* Streamlit wraps custom-component iframes in this container */
+      [data-testid="stIFrame"] {
+        height: 100vh !important;
+        max-height: 100vh !important;
+      }
+
+      iframe[title*="guardian_ui"] {
+        width: 100% !important;
+        height: 100vh !important;
+        border: 0 !important;
+        display: block !important;
+      }
+
+      html, body { overflow: hidden !important; }
     </style>
-    """,
-    unsafe_allow_html=True,
+    """
 )
 
 
