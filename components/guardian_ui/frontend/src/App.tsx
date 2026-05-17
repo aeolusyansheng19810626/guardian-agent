@@ -123,6 +123,17 @@ export default function App() {
     return () => window.removeEventListener("resize", update);
   }, []);
 
+  // While running, poll the backend so per-node runtime updates flow through.
+  // Streamlit can't push from Python; each POLL is a no-op event that
+  // triggers a script rerun, which re-syncs the worker thread's progress.
+  useEffect(() => {
+    if (args?.state !== "running") return;
+    const id = window.setInterval(() => {
+      sendEvent({ type: "POLL" });
+    }, 600);
+    return () => window.clearInterval(id);
+  }, [args?.state]);
+
   if (!args) {
     return (
       <div style={{ padding: 20, color: "#888", fontFamily: "sans-serif" }}>

@@ -8,7 +8,7 @@ sys.stdout.reconfigure(encoding="utf-8")
 with sync_playwright() as p:
     b = p.chromium.launch(headless=True)
     pg = b.new_context(viewport={"width": 1440, "height": 900}).new_page()
-    pg.goto("http://localhost:8525/", wait_until="networkidle", timeout=60_000)
+    pg.goto("http://localhost:8530/", wait_until="networkidle", timeout=60_000)
     # Give the websocket script a few seconds to actually render the iframe
     pg.wait_for_selector('iframe[title*="guardian_ui"]', timeout=30_000)
     pg.wait_for_timeout(2000)

@@ -74,6 +74,7 @@ export interface GuardianArgs {
 
 export type GuardianEvent =
   | { type: "RUN"; text: string; tab: Tab }
+  | { type: "POLL" }
   | { type: "CLEAR_INPUT" }
   | { type: "SET_INPUT"; text: string }
   | { type: "SET_TAB"; tab: Tab }
