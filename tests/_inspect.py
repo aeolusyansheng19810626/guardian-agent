@@ -8,9 +8,9 @@ sys.stdout.reconfigure(encoding="utf-8")
 with sync_playwright() as p:
     b = p.chromium.launch(headless=True)
     pg = b.new_context(viewport={"width": 1440, "height": 900}).new_page()
-    pg.goto("http://localhost:8536/", wait_until="networkidle", timeout=60_000)
+    pg.goto("http://localhost:8537/", wait_until="networkidle", timeout=60_000)
     # Give the websocket script a few seconds to actually render the iframe
-    pg.wait_for_selector('iframe[title*="guardian_ui"]', timeout=30_000)
+    pg.wait_for_selector('iframe[title*="guardian_ui"]', state="attached", timeout=30_000)
     pg.wait_for_timeout(2000)
 
     info = pg.evaluate(
@@ -106,6 +106,24 @@ with sync_playwright() as p:
             // List all iframes
             result.allIframes = Array.from(document.querySelectorAll('iframe'))
                 .map(f => ({ title: f.title, src: f.src.slice(0, 100) }));
+            // What does the FIRST stElementContainer look like?
+            const allEcs = document.querySelectorAll('[data-testid="stElementContainer"]');
+            result.elementContainersAll = Array.from(allEcs).map((e, i) => {
+                const r = e.getBoundingClientRect();
+                return {
+                    i,
+                    h: Math.round(r.height), y: Math.round(r.top),
+                    cls: (e.className||'').slice(0, 80),
+                    firstChildTag: e.firstElementChild?.tagName,
+                    firstChildTestid: e.firstElementChild?.getAttribute('data-testid'),
+                };
+            });
+            // stHtml or st-key-*
+            const stHtmls = document.querySelectorAll('[data-testid="stHtml"], [class*="st-key-"]');
+            result.stHtmlSeen = Array.from(stHtmls).map(e => ({
+                testid: e.getAttribute('data-testid'),
+                cls: (e.className||'').slice(0, 80),
+            }));
             // Identify scrollable elements (overflow auto/scroll AND scrollHeight > clientHeight)
             const all = document.querySelectorAll('*');
             const scrollers = [];
