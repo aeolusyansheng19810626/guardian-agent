@@ -275,12 +275,24 @@ def _run_review_thread(handle: RunHandle, graph: Any) -> None:
                     "completeness", "quality", "compliance", "logic", "prevention"
                 ):
                     handle.update_node(node_name, {"status": "done", "pct": 100})
+                    # When the LAST parallel agent completes, the next graph
+                    # step is guardian — flip it to running so the user sees
+                    # it active before its own chunk arrives.
+                    snap = handle.snapshot_runtime()
+                    dims_done = all(
+                        snap.get(d, {}).get("status") == "done"
+                        for d in active_dimensions(handle.detected_doc_type)
+                    )
+                    if dims_done and snap.get("guardian", {}).get("status") == "pending":
+                        handle.update_node("guardian", {"status": "running", "pct": 30})
                 elif node_name == "guardian":
                     handle.update_node("guardian", {
                         "status": "done",
                         "pct": 100,
                         "totalScore": int(partial.get("total_score", 0)),
                     })
+                    # Guardian → reporter is the last edge; light up reporter.
+                    handle.update_node("reporter", {"status": "running", "pct": 30})
                 elif node_name == "reporter":
                     handle.update_node("reporter", {"status": "done", "pct": 100})
 
