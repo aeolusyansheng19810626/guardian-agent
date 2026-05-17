@@ -139,13 +139,18 @@
    ========================================================= */
 * { box-sizing: border-box; }
 html, body, #root { height: 100%; }
+/* Use !important on bg/color: streamlit-component-lib injects an inline
+   style.css that pins body to its own (light) theme, so without !important
+   the dark mode swap never reaches the body. */
+html, body, #root {
+  background: var(--bg) !important;
+  color: var(--text) !important;
+}
 body {
   margin: 0;
   font-family: var(--font-sans);
   font-size: 14px;
   line-height: 1.5;
-  color: var(--text);
-  background: var(--bg);
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
   font-feature-settings: "ss01", "cv11";
