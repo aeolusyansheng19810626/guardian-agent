@@ -62,12 +62,24 @@ st.html(
         padding: 0 !important;
         margin: 0 !important;
         background: #f8fafc;
+        /* Force top-aligned block layout — some Streamlit versions
+           default to flex with center alignment which leaves a big
+           empty band above the iframe. */
+        display: block !important;
       }
 
+      /* Streamlit 1.39 (HF Space SDK) uses stAppViewBlockContainer;
+         1.40+ renamed it to stMainBlockContainer + introduced stMain.
+         List both so the styles apply on either version. */
       [data-testid="stMain"],
       [data-testid="stMainBlockContainer"],
+      [data-testid="stAppViewBlockContainer"],
       [data-testid="stVerticalBlock"],
-      [data-testid="stElementContainer"] {
+      [data-testid="stElementContainer"],
+      .main,
+      .main > .block-container,
+      section.main,
+      div.block-container {
         height: 100vh !important;
         max-height: 100vh !important;
         overflow: hidden !important;
@@ -76,6 +88,7 @@ st.html(
         max-width: 100% !important;
         width: 100% !important;
         gap: 0 !important;
+        display: block !important;
       }
 
       /* The anonymous wrapper Streamlit puts between stElementContainer and the
