@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { useStreamlitArgs, sendEvent, setFrameHeight } from "./StreamlitBridge";
 import { I18N } from "./i18n";
-import { Icon } from "./Icons";
+import { Icon, BrandMark } from "./Icons";
 import { TopBar } from "./components/TopBar";
 import { Sidebar } from "./components/Sidebar";
 import { InputPanel } from "./components/InputPanel";
@@ -231,8 +231,11 @@ export default function App() {
           <div className="col" style={{ gap: 18 }}>
             {args.state === "idle" && (
               <div className="empty" style={{ height: "100%" }}>
-                <div className="empty-icon">
-                  <Icon name="shield" size={26} />
+                <div
+                  className="empty-icon"
+                  style={{ background: "transparent", border: 0, boxShadow: "none" }}
+                >
+                  <BrandMark size={56} />
                 </div>
                 <h3>{t.appName}</h3>
                 <p>{t.appSubtitle}</p>

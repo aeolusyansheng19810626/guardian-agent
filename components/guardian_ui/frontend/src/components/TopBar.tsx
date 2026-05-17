@@ -127,7 +127,9 @@ export const TopBar = ({
       <div className="topbar-brand">
         <BrandMark size={28} />
         <span className="topbar-title">{t.appName}</span>
-        <span className="topbar-sub">v0.9 · demo</span>
+        <span className="topbar-sub" title="Author">
+          by Sheng&nbsp;Yan
+        </span>
       </div>
 
       <div className="topbar-divider" />
