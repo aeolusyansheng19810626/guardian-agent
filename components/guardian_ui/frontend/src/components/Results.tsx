@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useMemo, useRef, useState } from "react";
 import { Icon } from "../Icons";
 import type {
   GuardianResult,
@@ -439,19 +439,63 @@ const renderMarkdown = (md: string): string => {
 
 const ReportPanel = ({
   t,
+  lang,
   report,
 }: {
   t: Translations;
+  lang: Lang;
   report: string;
 }) => {
   const html = useMemo(() => renderMarkdown(report), [report]);
+  const [copied, setCopied] = useState(false);
+  const copyTimer = useRef<number | null>(null);
+
+  const onCopy = async () => {
+    try {
+      if (navigator.clipboard?.writeText) {
+        await navigator.clipboard.writeText(report);
+      } else {
+        // Fallback for older browsers / non-secure contexts
+        const ta = document.createElement("textarea");
+        ta.value = report;
+        ta.style.position = "fixed";
+        ta.style.opacity = "0";
+        document.body.appendChild(ta);
+        ta.select();
+        document.execCommand("copy");
+        document.body.removeChild(ta);
+      }
+      setCopied(true);
+      if (copyTimer.current) window.clearTimeout(copyTimer.current);
+      copyTimer.current = window.setTimeout(() => setCopied(false), 1600);
+    } catch (err) {
+      console.error("copy failed", err);
+    }
+  };
+
+  const onDownload = () => {
+    const blob = new Blob([report], { type: "text/markdown;charset=utf-8" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    const stamp = new Date().toISOString().replace(/[:.]/g, "-").slice(0, 19);
+    a.href = url;
+    a.download = `guardian-report-${stamp}.md`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+  };
+
   return (
     <div style={{ padding: "0 18px 18px" }}>
       <div className="row" style={{ gap: 6, marginBottom: 8 }}>
-        <button className="btn">
-          <Icon name="copy" size={13} /> {t.report.copy}
+        <button className="btn" onClick={onCopy}>
+          <Icon name={copied ? "check" : "copy"} size={13} />{" "}
+          {copied
+            ? { zh: "已复制", ja: "コピーしました", en: "Copied" }[lang]
+            : t.report.copy}
         </button>
-        <button className="btn">
+        <button className="btn" onClick={onDownload}>
           <Icon name="download" size={13} /> {t.report.download}
         </button>
       </div>
@@ -465,6 +509,7 @@ const ReportPanel = ({
 
 export const ResultsTabs = ({
   t,
+  lang,
   data,
 }: {
   t: Translations;
@@ -546,7 +591,9 @@ export const ResultsTabs = ({
           <FiveWhy t={t} items={data.fiveWhy || []} />
         </div>
       )}
-      {tab === "report" && <ReportPanel t={t} report={data.finalReport} />}
+      {tab === "report" && (
+        <ReportPanel t={t} lang={lang} report={data.finalReport} />
+      )}
     </section>
   );
 };
