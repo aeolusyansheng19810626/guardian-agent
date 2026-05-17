@@ -11,7 +11,7 @@ import {
   BreakdownCard,
   ResultsTabs,
 } from "./components/Results";
-import type { Lang, Theme, Tab } from "./types";
+import type { Lang, Theme, Tab, Density } from "./types";
 
 const PALETTES: Record<string, Record<string, string>> = {
   emerald: {
@@ -176,6 +176,10 @@ export default function App() {
         state={args.state}
         paletteColor={args.paletteColor}
         setPaletteColor={(v) => sendEvent({ type: "SET_PALETTE", color: v })}
+        density={args.density}
+        setDensity={(v: Density) =>
+          sendEvent({ type: "SET_DENSITY", density: v })
+        }
       />
 
       <Sidebar

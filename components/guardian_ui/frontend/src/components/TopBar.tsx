@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { Icon, BrandMark } from "../Icons";
-import type { Lang, Theme, Tab, DemoState } from "../types";
+import type { Lang, Theme, Tab, DemoState, Density } from "../types";
 import type { Translations } from "../i18n";
 
 const PALETTE_OPTIONS = [
@@ -104,6 +104,8 @@ interface TopBarProps {
   state: DemoState;
   paletteColor: string;
   setPaletteColor: (v: string) => void;
+  density: Density;
+  setDensity: (v: Density) => void;
 }
 
 export const TopBar = ({
@@ -117,6 +119,8 @@ export const TopBar = ({
   state,
   paletteColor,
   setPaletteColor,
+  density,
+  setDensity,
 }: TopBarProps) => {
   return (
     <header className="topbar">
@@ -183,6 +187,16 @@ export const TopBar = ({
         </div>
 
         <ColorSwatch value={paletteColor} onChange={setPaletteColor} />
+
+        <button
+          className="icon-btn"
+          title={t.density[density === "cozy" ? "compact" : "cozy"]}
+          onClick={() =>
+            setDensity(density === "cozy" ? "compact" : "cozy")
+          }
+        >
+          <Icon name={density === "cozy" ? "list" : "layers"} size={16} />
+        </button>
 
         <button
           className="icon-btn"
