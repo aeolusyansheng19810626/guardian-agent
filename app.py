@@ -42,26 +42,55 @@ st.html(
 
       [data-testid="stSidebar"] { display: none !important; }
 
-      [data-testid="stAppViewContainer"] { padding: 0 !important; }
+      /* Force the entire Streamlit page chrome to fit the viewport with no
+         outer scroll. Layered !important rules: any one container letting
+         content grow past the viewport produces a phantom outer scrollbar
+         on top of our React app's own internal scrolling. */
+      html, body {
+        height: 100% !important;
+        margin: 0 !important;
+        padding: 0 !important;
+        overflow: hidden !important;
+      }
+
+      .stApp,
+      [data-testid="stApp"],
+      [data-testid="stAppViewContainer"] {
+        height: 100vh !important;
+        max-height: 100vh !important;
+        overflow: hidden !important;
+        padding: 0 !important;
+        margin: 0 !important;
+        background: #f8fafc;
+      }
 
       [data-testid="stMain"],
-      [data-testid="stMainBlockContainer"] {
+      [data-testid="stMainBlockContainer"],
+      [data-testid="stVerticalBlock"],
+      [data-testid="stElementContainer"] {
+        height: 100vh !important;
+        max-height: 100vh !important;
+        overflow: hidden !important;
         padding: 0 !important;
         margin: 0 !important;
         max-width: 100% !important;
         width: 100% !important;
+        gap: 0 !important;
       }
-      [data-testid="stMainBlockContainer"] > div { gap: 0 !important; }
 
-      [data-testid="stVerticalBlock"] { gap: 0 !important; }
-
-      .stApp,
-      [data-testid="stApp"] { background: #f8fafc; }
+      /* The anonymous wrapper Streamlit puts between stElementContainer and the
+         iframe — only reachable via descendant selector. */
+      [data-testid="stElementContainer"] > div {
+        height: 100% !important;
+        overflow: hidden !important;
+      }
 
       /* Streamlit wraps custom-component iframes in this container */
-      [data-testid="stIFrame"] {
+      [data-testid="stIFrame"],
+      [data-testid="stCustomComponentV1"] {
         height: 100vh !important;
         max-height: 100vh !important;
+        overflow: hidden !important;
       }
 
       iframe[title*="guardian_ui"] {
@@ -70,8 +99,6 @@ st.html(
         border: 0 !important;
         display: block !important;
       }
-
-      html, body { overflow: hidden !important; }
     </style>
     """
 )

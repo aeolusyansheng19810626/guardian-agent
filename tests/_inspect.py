@@ -8,7 +8,7 @@ sys.stdout.reconfigure(encoding="utf-8")
 with sync_playwright() as p:
     b = p.chromium.launch(headless=True)
     pg = b.new_context(viewport={"width": 1440, "height": 900}).new_page()
-    pg.goto("http://localhost:8530/", wait_until="networkidle", timeout=60_000)
+    pg.goto("http://localhost:8534/", wait_until="networkidle", timeout=60_000)
     # Give the websocket script a few seconds to actually render the iframe
     pg.wait_for_selector('iframe[title*="guardian_ui"]', timeout=30_000)
     pg.wait_for_timeout(2000)
@@ -106,6 +106,33 @@ with sync_playwright() as p:
             // List all iframes
             result.allIframes = Array.from(document.querySelectorAll('iframe'))
                 .map(f => ({ title: f.title, src: f.src.slice(0, 100) }));
+            // Identify scrollable elements (overflow auto/scroll AND scrollHeight > clientHeight)
+            const all = document.querySelectorAll('*');
+            const scrollers = [];
+            for (const e of all) {
+                const cs = getComputedStyle(e);
+                const ovY = cs.overflowY;
+                if ((ovY === 'auto' || ovY === 'scroll') && e.scrollHeight > e.clientHeight + 1) {
+                    scrollers.push({
+                        tag: e.tagName,
+                        cls: (e.className || '').slice(0, 60),
+                        testid: e.getAttribute('data-testid'),
+                        ovY,
+                        scrollH: e.scrollHeight,
+                        clientH: e.clientHeight,
+                    });
+                }
+            }
+            result.scrollers = scrollers.slice(0, 20);
+            // Whole-document overflow check
+            result.htmlScroll = {
+                docScrollH: document.documentElement.scrollHeight,
+                docClientH: document.documentElement.clientHeight,
+                bodyScrollH: document.body.scrollHeight,
+                bodyClientH: document.body.clientHeight,
+                htmlOvY: getComputedStyle(document.documentElement).overflowY,
+                bodyOvY: getComputedStyle(document.body).overflowY,
+            };
             return result;
         }"""
     )
