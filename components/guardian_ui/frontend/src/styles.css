@@ -791,7 +791,7 @@ input, textarea, select { font-family: inherit; color: inherit; }
 .node-bar-fill {
   position: absolute; inset: 0;
   border-radius: inherit;
-  background: var(--brand-500);
+  background: var(--accent-500);
   transition: width 240ms ease-out;
 }
 .node-status-dot {
@@ -801,11 +801,11 @@ input, textarea, select { font-family: inherit; color: inherit; }
 
 .node[data-status="pending"] { opacity: 0.7; }
 .node[data-status="running"] {
-  border-color: color-mix(in oklab, var(--brand-500) 60%, transparent);
-  box-shadow: 0 0 0 3px color-mix(in oklab, var(--brand-500) 14%, transparent), var(--shadow-md);
+  border-color: color-mix(in oklab, var(--accent-500) 60%, transparent);
+  box-shadow: 0 0 0 3px color-mix(in oklab, var(--accent-500) 14%, transparent), var(--shadow-md);
   animation: nodePulse 1.6s ease-in-out infinite;
 }
-.node[data-status="running"] .node-status-dot { background: var(--brand-500); animation: blink 1s infinite; }
+.node[data-status="running"] .node-status-dot { background: var(--accent-500); animation: blink 1s infinite; }
 .node[data-status="done"] { border-color: color-mix(in oklab, var(--ok-500) 40%, transparent); }
 .node[data-status="done"] .node-status-dot { background: var(--ok-500); }
 .node[data-status="warn"] { border-color: color-mix(in oklab, var(--warn-500) 50%, transparent); }
@@ -815,8 +815,8 @@ input, textarea, select { font-family: inherit; color: inherit; }
 
 @keyframes blink { 0%,100% { opacity: 1; } 50% { opacity: 0.35; } }
 @keyframes nodePulse {
-  0%,100% { box-shadow: 0 0 0 3px color-mix(in oklab, var(--brand-500) 14%, transparent), var(--shadow-md); }
-  50%     { box-shadow: 0 0 0 6px color-mix(in oklab, var(--brand-500) 8%,  transparent), var(--shadow-md); }
+  0%,100% { box-shadow: 0 0 0 3px color-mix(in oklab, var(--accent-500) 14%, transparent), var(--shadow-md); }
+  50%     { box-shadow: 0 0 0 6px color-mix(in oklab, var(--accent-500) 8%,  transparent), var(--shadow-md); }
 }
 
 .node-classify { background: linear-gradient(180deg, var(--bg-elev), var(--bg-muted)); }
@@ -826,9 +826,9 @@ input, textarea, select { font-family: inherit; color: inherit; }
 
 /* Edge animations */
 .edge { stroke: var(--border-strong); stroke-width: 1.5; fill: none; }
-.edge-active { stroke: var(--brand-500); stroke-width: 1.8; }
+.edge-active { stroke: var(--ok-500); stroke-width: 1.8; }
 .edge-flow {
-  stroke: var(--brand-500); stroke-width: 2; fill: none;
+  stroke: var(--accent-500); stroke-width: 2; fill: none;
   stroke-dasharray: 5 8;
   animation: dash 0.8s linear infinite;
 }

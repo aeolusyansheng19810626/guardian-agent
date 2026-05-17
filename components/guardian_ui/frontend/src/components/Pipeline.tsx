@@ -116,7 +116,7 @@ const PipelineNode = ({
         <span style={{ color: "var(--text)", fontWeight: 600 }}>{score}</span>
       )}
       {status === "running" && (
-        <span className="mono" style={{ color: "var(--brand-600)" }}>
+        <span className="mono" style={{ color: "var(--accent-600)" }}>
           {runningPct}%
         </span>
       )}
@@ -345,9 +345,9 @@ export const PipelineCard = ({
           <span
             className="pipeline-legend-dot"
             style={{
-              background: "var(--brand-500)",
+              background: "var(--accent-500)",
               boxShadow:
-                "0 0 0 3px color-mix(in oklab, var(--brand-500) 18%, transparent)",
+                "0 0 0 3px color-mix(in oklab, var(--accent-500) 18%, transparent)",
             }}
           />
           {t.pipeline.legendRunning}
@@ -363,7 +363,7 @@ export const PipelineCard = ({
           <svg width="24" height="6">
             <path
               d="M0,3 H24"
-              stroke="var(--brand-500)"
+              stroke="var(--accent-500)"
               strokeWidth="2"
               strokeDasharray="5 4"
             />
