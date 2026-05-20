@@ -51,14 +51,14 @@ const NodeIconFor = (dim: string): IconName =>
 
 const ModelFor = (dim: string) =>
   (({
-    classify: { vendor: "gemini", label: "Flash" },
+    classify: { vendor: "gemini", label: "3.5 Flash" },
     completeness: { vendor: "groq", label: "Llama 70B" },
-    quality: { vendor: "gemini", label: "Flash" },
-    compliance: { vendor: "gemini", label: "Flash" },
-    logic: { vendor: "gemini", label: "Flash" },
-    prevention: { vendor: "gemini", label: "Flash" },
-    guardian: { vendor: "gemini", label: "2.5 Pro" },
-    reporter: { vendor: "gemini", label: "2.5 Pro" },
+    quality: { vendor: "gemini", label: "3.5 Flash" },
+    compliance: { vendor: "gemini", label: "3.5 Flash" },
+    logic: { vendor: "gemini", label: "3.5 Flash" },
+    prevention: { vendor: "gemini", label: "3.5 Flash" },
+    guardian: { vendor: "gemini", label: "3.1 Pro" },
+    reporter: { vendor: "gemini", label: "3.1 Pro" },
   } as Record<string, { vendor: string; label: string }>)[dim] || {
     vendor: "gemini",
     label: "—",

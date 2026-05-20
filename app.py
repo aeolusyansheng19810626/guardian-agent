@@ -222,7 +222,7 @@ def _build_result(
         "submittedAt": submitted_at,
         "latencyMs": latency_ms,
         "tokens": 0,
-        "primaryModel": "Gemini 2.5 Pro" if "pro" in GEMINI_PRO.lower() else GEMINI_PRO,
+        "primaryModel": "Gemini 3.1 Pro" if "pro" in GEMINI_PRO.lower() else GEMINI_PRO,
     }
 
 

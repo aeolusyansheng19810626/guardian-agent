@@ -15,15 +15,19 @@ GROQ_API_KEY: Final[str | None] = os.getenv("GROQ_API_KEY")
 GCP_SA_JSON: Final[str | None] = os.getenv("GOOGLE_APPLICATION_CREDENTIALS_JSON")
 
 GCP_PROJECT: Final[str] = os.getenv("GOOGLE_CLOUD_PROJECT", "yansheng-project")
-GCP_REGION: Final[str] = os.getenv("GOOGLE_CLOUD_REGION", "us-central1")
+GCP_REGION: Final[str] = os.getenv("GOOGLE_CLOUD_REGION", "global")
 
+# global location 走的是无 region 前缀的 host；regional location 走 {region}-aiplatform host
 GEMINI_BASE_URL: Final[str] = (
-    f"https://{GCP_REGION}-aiplatform.googleapis.com/v1beta1/"
-    f"projects/{GCP_PROJECT}/locations/{GCP_REGION}/endpoints/openapi/"
+    f"https://aiplatform.googleapis.com/v1beta1/"
+    f"projects/{GCP_PROJECT}/locations/global/endpoints/openapi/"
+    if GCP_REGION == "global"
+    else f"https://{GCP_REGION}-aiplatform.googleapis.com/v1beta1/"
+         f"projects/{GCP_PROJECT}/locations/{GCP_REGION}/endpoints/openapi/"
 )
 
-GEMINI_PRO: Final[str] = "google/gemini-2.5-pro"
-GEMINI_FLASH: Final[str] = "google/gemini-2.5-flash"
+GEMINI_PRO: Final[str] = "google/gemini-3.1-pro-preview"
+GEMINI_FLASH: Final[str] = "google/gemini-3.5-flash"
 GROQ_MODEL: Final[str] = "llama-3.3-70b-versatile"
 
 PASS_THRESHOLD: Final[int] = 80
